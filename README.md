@@ -3,7 +3,7 @@
 
 Most tutorials assume your system has a standard eth0 interface and predictable Docker networking. If you're on a laptop connected over Wi-Fi, things break.
 
-This guide helps you:
+## This guide helps you:
 
 - Avoid Docker network misconfigurations
 - Fix interface eth0 does not currently exist errors
@@ -11,14 +11,14 @@ This guide helps you:
 - Ensure Pi-hole can resolve and reach the internet
 - Properly use network_mode: host on Wi-Fi-only setups
 
-Pre-Requisites:
+## Pre-Requisites:
 
 - A Linux machine (in this case: Kali Linux) connected via Wi-Fi
 - Docker and Docker Compose installed
 - Basic familiarity with Linux command line
 
 
-✅ Step 1: Install Docker & Docker Compose
+## ✅ Step 1: Install Docker & Docker Compose
 
 Avoid broken plugin conflicts by installing Docker from official sources:
 
@@ -41,10 +41,10 @@ sudo apt update
 sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-📂 Step 2: Create Your Pi-hole Project
+## 📂 Step 2: Create Your Pi-hole Project
 
-mkdir ~/pihole-docker && cd ~/pihole-docker
-mkdir etc-pihole etc-dnsmasq.d
+`mkdir ~/pihole-docker && cd ~/pihole-docker`
+`mkdir etc-pihole etc-dnsmasq.d`
 
 Then create your docker-compose.yml file in pihole-docker directory:
 `sudo nano docker-compose.yml`
@@ -72,8 +72,7 @@ services:
 We use "network_mode: host" to bypass Docker bridge networking, which causes outbound issues on Wi-Fi-only systems.
 Don't use the ports: comment out the ports statements (If any) when using host networking.
 
-
-🚀 Step 3: Launch Pi-hole
+## 🚀 Step 3: Launch Pi-hole
 
 ```bash
 docker compose up -d
@@ -83,11 +82,10 @@ http://localhost/admin or http://<your-laptop-ip>:80/admin
 
 Log in using the password you set in WEBPASSWORD.
 
+## ⚠️ Common Issues & Fixes
 
-⚠️ Common Issues & Fixes
 
-
-❌ interface eth0 does not currently exist
+### ❌ interface eth0 does not currently exist
 Pi-hole tries to bind to eth0 by default, but Wi-Fi systems use wlan0 (Or similar).
 
 Fix:
@@ -100,7 +98,7 @@ exit
 docker restart pihole
 ```
 
-❌ connection refused when updating gravity (blocklists)
+### ❌ connection refused when updating gravity (blocklists)
 
 Even though DNS works, Pi-hole can't reach the internet (e.g., GitHub blocklists). This usually happens when using Docker's default bridge on Wi-Fi.
 
@@ -116,7 +114,7 @@ Then update blocklists:
 
 `docker exec -it pihole pihole -g`
 
-❌ Admin password doesn’t work?
+### ❌ Admin password doesn’t work?
 
 Sometimes the WEBPASSWORD env variable is ignored if you restart Pi-hole without clearing volumes.
 
@@ -134,14 +132,16 @@ mkdir etc-pihole etc-dnsmasq.d
 docker compose up -d
 ```
 
-📶 Set Your Devices to Use Pi-hole DNS
+## 📶 Set Your Devices to Use Pi-hole DNS
 
-Option 1: Set Pi-hole’s IP (192.168.1.xxx) as the Primary DNS in your router (This will essentially make Pi-hole the DNS server for all the devices that connect to your router)
+### Option 1:
+Set Pi-hole’s IP (192.168.1.xxx) as the Primary DNS in your router (This will essentially make Pi-hole the DNS server for all the devices that connect to your router)
 
-Option 2: Manually set DNS on each device
+### Option 2:
+Manually set DNS on each device
 
 
-🧠 My future additions would be:
+## 🧠 My future additions would be:
 
 Add Unbound to turn Pi-hole into a privacy-respecting recursive DNS server
 Set up cloudflared to use DNS-over-HTTPS
@@ -149,7 +149,7 @@ Visualize query logs with Grafana + InfluxDB
 Use Pi-hole as DHCP server if your router doesn’t allow custom DNS
 
 
-💡 Final Thoughts
+## 💡 Final Thoughts
 
 This tutorial avoids the usual pitfalls when setting up Pi-hole on Wi-Fi-only laptops:
 
@@ -161,13 +161,13 @@ This tutorial avoids the usual pitfalls when setting up Pi-hole on Wi-Fi-only la
 If you're facing strange networking issues, always try using network_mode: host on a trusted local network — it’s the simplest way to give Pi-hole full access.
 
 
-🙌 Contributions Welcome
+## 🙌 Contributions Welcome
 
 Open an issue or PR if you’ve faced similar edge cases.
 Let’s make Pi-hole easier to deploy on laptops and Kali/Arch-type systems.
 
 
-## License
+### License
 
 - 📘 **Text and tutorial content**: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - 💻 **Code snippets and examples**: [MIT License](https://opensource.org/licenses/MIT)
